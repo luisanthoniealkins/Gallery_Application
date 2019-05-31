@@ -14,7 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 
@@ -32,8 +32,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ImageV
     @NonNull
     public ImageViewHolder onCreateViewHolder(ViewGroup parent, int i) {
 
-        Log.d("TAG","pos : " + i);
-
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.album_layout,parent, false);
 
         ImageViewHolder imageViewHolder = new ImageViewHolder(view);
@@ -48,12 +46,12 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ImageV
 
         final Uri image_uri = s.getUri();
 
-        Picasso.with(mContext).load(image_uri).placeholder(R.drawable.color1).fit().centerInside().into(viewHolder.Album);
+        Glide.with(mContext).load(image_uri).placeholder(R.drawable.color1).centerInside().into(viewHolder.Album);
         viewHolder.AlbumTitle.setText(s.getTitle());
 
 
         DisplayMetrics displayMetrics = mContext.getResources().getDisplayMetrics();
-        float screenWidthDp = displayMetrics.widthPixels / displayMetrics.density;
+        float screenWidthDp = displayMetrics.widthPixels / 2;
 
         ViewGroup.LayoutParams layoutParams = viewHolder.Album.getLayoutParams();
         layoutParams.width = (int)screenWidthDp-16;

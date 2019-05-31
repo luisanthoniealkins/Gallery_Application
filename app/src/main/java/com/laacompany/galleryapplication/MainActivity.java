@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
         mLayoutManager = new GridLayoutManager(this,2 );
         mRecyclerView.setHasFixedSize(true);
 
+        mRecyclerView.setLayoutManager(mLayoutManager);
 
         showBasicList();
     }
@@ -84,10 +85,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void showBasicList(){
 
-        mRecyclerView.setLayoutManager(mLayoutManager);
-
         ArrayList<Spacecraft> mSpacecrafts = getExternalData("Basic");
-        Log.d("TAG","BASIC " + mSpacecrafts.size());
 
         mAdapter = new RecyclerAdapter(mSpacecrafts, this);
         mRecyclerView.setAdapter(mAdapter);
@@ -95,10 +93,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void showAdvanceList(){
 
-        mRecyclerView.setLayoutManager(mLayoutManager);
-
         ArrayList<Spacecraft> mSpacecrafts = getExternalData("Advance");
-        Log.d("TAG","ADVANCE " + mSpacecrafts.size());
 
         mAdapter = new RecyclerAdapter(mSpacecrafts, this);
         mRecyclerView.setAdapter(mAdapter);

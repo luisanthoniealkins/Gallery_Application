@@ -8,9 +8,10 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 
-import com.squareup.picasso.Picasso;
 
 import android.net.Uri;
+
+import com.bumptech.glide.Glide;
 
 public class ImageActivity extends AppCompatActivity {
 
@@ -35,7 +36,7 @@ public class ImageActivity extends AppCompatActivity {
         String image_uri = getIntent().getStringExtra(EXTRA_IMAGE_URI);
         Uri uri = Uri.parse(image_uri);
 
-        Picasso.with(this).load(uri).placeholder(R.drawable.color1).into(mImageView);
+        Glide.with(this).load(uri).placeholder(R.drawable.color1).into(mImageView);
 
     }
 
