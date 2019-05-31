@@ -1,8 +1,18 @@
 package com.laacompany.galleryapplication;
 
+import android.Manifest;
+import android.annotation.TargetApi;
+import android.app.Activity;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Debug;
 import android.os.Environment;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -24,18 +34,32 @@ public class MainActivity extends AppCompatActivity {
 
     private RecyclerView.LayoutManager mLayoutManager;
 
+    private static final int LOAD_IMAGE_PERMISSION_CODE = 1;
+
+    Context context;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mRecyclerView = findViewById(R.id.id_recyclerview);
 
+        context = MainActivity.this;
+
         mLayoutManager = new GridLayoutManager(this,2 );
         mRecyclerView.setHasFixedSize(true);
 
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        showBasicList();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        if (checkPermission())
+            showBasicList();
+
     }
 
 
@@ -73,11 +97,13 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.id_basic_directory:
-                showBasicList();
+                if (checkPermission())
+                    showBasicList();
                 break;
 
             case R.id.id_advance_directory:
-                showAdvanceList();
+                if (checkPermission())
+                    showAdvanceList();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -98,4 +124,51 @@ public class MainActivity extends AppCompatActivity {
         mAdapter = new RecyclerAdapter(mSpacecrafts, this);
         mRecyclerView.setAdapter(mAdapter);
     }
+
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    public boolean checkPermission()
+    {
+        int currentAPIVersion = Build.VERSION.SDK_INT;
+        if(currentAPIVersion>=android.os.Build.VERSION_CODES.M)
+        {
+            if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                if (ActivityCompat.shouldShowRequestPermissionRationale((Activity) context, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                    AlertDialog.Builder alertBuilder = new AlertDialog.Builder(context);
+                    alertBuilder.setCancelable(true);
+                    alertBuilder.setTitle("Permission necessary");
+                    alertBuilder.setMessage("Permission is needed to load images");
+                    alertBuilder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+                        public void onClick(DialogInterface dialog, int which) {
+                            ActivityCompat.requestPermissions((Activity)context, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, LOAD_IMAGE_PERMISSION_CODE);
+                        }
+                    });
+                    AlertDialog alert = alertBuilder.create();
+                    alert.show();
+                } else {
+                    ActivityCompat.requestPermissions((Activity)context, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, LOAD_IMAGE_PERMISSION_CODE);
+                }
+                return false;
+            } else {
+                return true;
+            }
+        } else {
+            return true;
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case LOAD_IMAGE_PERMISSION_CODE:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    showBasicList();
+                } else {
+                    //code for deny
+                }
+                break;
+        }
+    }
+
 }
