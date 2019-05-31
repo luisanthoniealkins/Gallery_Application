@@ -11,7 +11,7 @@ import android.widget.ImageView;
 
 import android.net.Uri;
 
-import com.bumptech.glide.Glide;
+import com.squareup.picasso.Picasso;
 
 public class ImageActivity extends AppCompatActivity {
 
@@ -36,7 +36,7 @@ public class ImageActivity extends AppCompatActivity {
         String image_uri = getIntent().getStringExtra(EXTRA_IMAGE_URI);
         Uri uri = Uri.parse(image_uri);
 
-        Glide.with(this).load(uri).placeholder(R.drawable.color1).into(mImageView);
+        Picasso.with(this).load(uri).placeholder(R.drawable.color1).into(mImageView);
 
     }
 
