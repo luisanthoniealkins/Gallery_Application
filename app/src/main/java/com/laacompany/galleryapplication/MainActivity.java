@@ -42,6 +42,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+        checkPermission();
+
         mRecyclerView = findViewById(R.id.id_recyclerview);
 
         context = MainActivity.this;
@@ -56,10 +60,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-
         if (checkPermission())
             showBasicList();
-
     }
 
 
@@ -73,14 +75,20 @@ public class MainActivity extends AppCompatActivity {
         if (downloadFolder.exists())
         {
             File files[] = downloadFolder.listFiles();
-
-            for (File file : files)
+            try
             {
-                Spacecraft s = new Spacecraft();
-                s.setTitle(file.getName());
-                s.setUri(Uri.fromFile(file));
-                spacecrafts.add(s);
+                for (File file : files)
+                {
+                    Spacecraft s = new Spacecraft();
+                    s.setTitle(file.getName());
+                    s.setUri(Uri.fromFile(file));
+                    spacecrafts.add(s);
+                }
+            } catch (Exception e){
+                e.printStackTrace();
             }
+
+
         }
 
         return spacecrafts;
@@ -125,7 +133,6 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.setAdapter(mAdapter);
     }
 
-
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     public boolean checkPermission()
     {
@@ -137,7 +144,7 @@ public class MainActivity extends AppCompatActivity {
                     AlertDialog.Builder alertBuilder = new AlertDialog.Builder(context);
                     alertBuilder.setCancelable(true);
                     alertBuilder.setTitle("Permission necessary");
-                    alertBuilder.setMessage("Permission is needed to load images");
+                    alertBuilder.setMessage("Load gallery permission is needed to load images");
                     alertBuilder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
                         public void onClick(DialogInterface dialog, int which) {
@@ -163,9 +170,9 @@ public class MainActivity extends AppCompatActivity {
         switch (requestCode) {
             case LOAD_IMAGE_PERMISSION_CODE:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    showBasicList();
                 } else {
                     //code for deny
+                    finish();
                 }
                 break;
         }
