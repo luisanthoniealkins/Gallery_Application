@@ -1,5 +1,5 @@
 # Gallery_Application
 
-Aplikasi tersebut telah memuat path BASIC dan path ADVANCE, apknya terdapat pada folder GalleryApp.
+Aplikasi tersebut telah memuat path BASIC dan path ADVANCE, apknya terdapat pada bagian Release
 
 Selamat Menikmati :)
